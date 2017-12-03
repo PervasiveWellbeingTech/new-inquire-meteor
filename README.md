@@ -1,8 +1,14 @@
-### Pup
-A boilerplate for products.
+### INQUIRE.AI
+A search engine for qualitative research.
 
-[Read the Documentation](http://cleverbeagle.com/pup)
+[Check it out](http://www.inquire.ai)
 
 ---
+##DOCUMENTATION
 
-Need help and want to stay accountable building your product? [Check out Clever Beagle](http://cleverbeagle.com).
+This is the most recent front-end to the Inquire Project. It's built using MeteorJS, ReactJS and MongoDB. The queries are directed at the backend server for search results, and can be cached as users dictate.
+
+For users, the initial search page doesn't cache any results, if a user needs to keep a record of any progress, they need to create a session which will store a record of their search queries, the results and edits, notes and insights gained, interesting users and any other information they need. Our goal is to be able to generate a report for the research sessions created whenever required.
+
+##TECHNICAL
+#

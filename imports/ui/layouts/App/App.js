@@ -12,10 +12,19 @@ import Navigation from '../../components/Navigation/Navigation';
 import Authenticated from '../../components/Authenticated/Authenticated';
 import Public from '../../components/Public/Public';
 import Index from '../../pages/Index/Index';
+
 import Documents from '../../pages/Documents/Documents';
 import NewDocument from '../../pages/NewDocument/NewDocument';
 import ViewDocument from '../../pages/ViewDocument/ViewDocument';
 import EditDocument from '../../pages/EditDocument/EditDocument';
+
+import Sessions from '../../pages/Sessions/Sessions';
+import NewSession from '../../pages/NewSession/NewSession';
+import ViewSession from '../../pages/ViewSession/ViewSession';
+import EditSession from '../../pages/EditSession/EditSession';
+
+import Search from '../../pages/Search/Search';
+
 import Signup from '../../pages/Signup/Signup';
 import Login from '../../pages/Login/Login';
 import Logout from '../../pages/Logout/Logout';
@@ -26,6 +35,7 @@ import Profile from '../../pages/Profile/Profile';
 import NotFound from '../../pages/NotFound/NotFound';
 import Footer from '../../components/Footer/Footer';
 import Terms from '../../pages/Terms/Terms';
+import About from '../../pages/About/About';
 import Privacy from '../../pages/Privacy/Privacy';
 import ExamplePage from '../../pages/ExamplePage/ExamplePage';
 
@@ -53,6 +63,16 @@ const App = props => (
           <Authenticated exact path="/documents/new" component={NewDocument} {...props} />
           <Authenticated exact path="/documents/:_id" component={ViewDocument} {...props} />
           <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...props} />
+
+          <Route name="about" path="/about" component={About} />
+          {/* <Route exact path="/search" component={Search} {...props} /> */}
+          <Route exact path="/search/:searchInputText" component={Search} {...props} />
+
+          <Authenticated exact path="/sessions" component={Sessions} {...props} />
+          <Authenticated exact path="/sessions/new" component={NewSession} {...props} />
+          <Authenticated exact path="/sessions/:_id" component={ViewSession} {...props} />
+          <Authenticated exact path="/sessions/:_id/edit" component={EditSession} {...props} />
+
           <Authenticated exact path="/profile" component={Profile} {...props} />
           <Public path="/signup" component={Signup} {...props} />
           <Public path="/login" component={Login} {...props} />
@@ -104,6 +124,6 @@ export default createContainer(() => {
     roles: !loading && Roles.getRolesForUser(userId),
     userId,
     emailAddress,
-    emailVerified: user && user.emails ? user && user.emails && user.emails[0].verified : true,
+    emailVerified: true,
   };
 }, App);
