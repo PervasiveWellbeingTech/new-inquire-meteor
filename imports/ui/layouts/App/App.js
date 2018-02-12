@@ -71,6 +71,9 @@ const App = props => (
           <Authenticated exact path="/sessions" component={Sessions} {...props} />
           <Authenticated exact path="/sessions/new" component={NewSession} {...props} />
           <Authenticated exact path="/sessions/:_id" component={ViewSession} {...props} />
+
+          {/* <Authenticated exact path="/sessions/:_id/search/:searchInputText" component={ViewSession} {...props} /> */}
+
           <Authenticated exact path="/sessions/:_id/edit" component={EditSession} {...props} />
 
           <Authenticated exact path="/profile" component={Profile} {...props} />

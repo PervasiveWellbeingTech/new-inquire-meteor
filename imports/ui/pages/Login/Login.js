@@ -42,12 +42,15 @@ class Login extends React.Component {
 
   handleSubmit() {
     const { history } = this.props;
-
+    console.log(history);
+    console.log("About to login");
     Meteor.loginWithPassword(this.emailAddress.value, this.password.value, (error) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
+        console.log("Just logged in, should go to home not docs");
         Bert.alert('Welcome back!', 'success');
+        history.push('/');
       }
     });
   }
