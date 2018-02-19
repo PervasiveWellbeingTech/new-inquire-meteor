@@ -6,6 +6,15 @@
   // background-color: grey;
 }
 
+#input-dropdown-addon{
+  z-index: 1000;
+}
+
+ul.dropdown-menu{
+  z-index: 10000;
+  // background-color: black;
+}
+
 #resLoading{
   display: none;
 }

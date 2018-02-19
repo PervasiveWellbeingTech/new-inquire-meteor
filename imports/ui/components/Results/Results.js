@@ -31,9 +31,7 @@ import './Results.scss';
          Bert.alert(error.reason, 'danger');
        } else {
          result = response;
-         // console.log(result);
-         // result.query_results[0].context = array of all sentences with curr sent midway
-         // TODO: from each sent in array above, create sentence to be show in modal below.
+         // from each sent in array above, create sentence to be show in modal below.
          var contexts = result.query_results[0].context;
          var sentence = '';
          for(var i=0; i< contexts.length; i++){
@@ -100,6 +98,21 @@ import './Results.scss';
             document.querySelector('#resLoading').style.display = 'none';
             document.querySelector('#resDone').style.display = 'block';
           }
+          //TODO:  save all this info to the current session
+          Meteor.call('results.insert', result, sessionId, (error, response) => {
+            if (error){
+              console.log(error);
+            }else{
+              console.log('results saved in history');
+              Meteor.call('privateQueries.insert', {query:searchInputText, sessionId: sessionId}, (error, privateQueryId) => {
+                if (error) {
+                  Bert.alert(error.reason, 'danger');
+                } else {
+                  console.log("saved authenticated private query");
+                }
+              });
+            }
+          });
       }
     });
   }
@@ -251,6 +264,22 @@ import './Results.scss';
             document.querySelector('#resLoading').style.display = 'none';
             document.querySelector('#resDone').style.display = 'block';
           }
+
+          //TODO:  save all this info to the current session
+          Meteor.call('results.insert', result, sessionId, (error, response) => {
+            if (error){
+              console.log(error);
+            }else{
+              console.log('results saved in history');
+              Meteor.call('privateQueries.insert', {query:searchInputText, sessionId: sessionId}, (error, privateQueryId) => {
+                if (error) {
+                  Bert.alert(error.reason, 'danger');
+                } else {
+                  console.log("saved authenticated private query");
+                }
+              });
+            }
+          });
       }
     });
 
@@ -322,9 +351,10 @@ export default class Results extends React.Component {
   }
 
   render() {
-    const { query } = this.props;
+    const { query, sessionId } = this.props;
     Session.set("currQueryId", "lol");
     Session.set("currQueryText", query.query);
+    Session.set("currSessionId", sessionId);
     return (
       <div> <div id="resDone">
         <BootstrapTable data={ query.query_results } deleteRow={ false } options={ this.options } responsive striped hover id="searchDone">
@@ -342,6 +372,7 @@ export default class Results extends React.Component {
 
 Results.propTypes = {
   query: PropTypes.object,
+  sessionId: PropTypes.string,
 };
 
 //query-string, query_results=[], result_count-int

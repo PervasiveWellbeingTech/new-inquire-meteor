@@ -22,6 +22,8 @@ import Sessions from '../../pages/Sessions/Sessions';
 import NewSession from '../../pages/NewSession/NewSession';
 import ViewSession from '../../pages/ViewSession/ViewSession';
 import EditSession from '../../pages/EditSession/EditSession';
+import ViewSessionResults from '../../pages/ViewSession/ViewSessionResults';
+import SessionProgress from '../../pages/ViewSession/SessionProgress';
 
 import Search from '../../pages/Search/Search';
 
@@ -72,9 +74,10 @@ const App = props => (
           <Authenticated exact path="/sessions/new" component={NewSession} {...props} />
           <Authenticated exact path="/sessions/:_id" component={ViewSession} {...props} />
 
-          {/* <Authenticated exact path="/sessions/:_id/search/:searchInputText" component={ViewSession} {...props} /> */}
+          <Authenticated exact path="/sessions/:_id/search/:searchInputText" component={ViewSessionResults} {...props} />
 
           <Authenticated exact path="/sessions/:_id/edit" component={EditSession} {...props} />
+          <Authenticated exact path="/sessions/:_id/progress" component={SessionProgress} {...props} />
 
           <Authenticated exact path="/profile" component={Profile} {...props} />
           <Public path="/signup" component={Signup} {...props} />

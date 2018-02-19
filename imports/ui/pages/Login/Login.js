@@ -62,13 +62,13 @@ class Login extends React.Component {
           <h4 className="page-header">Log In</h4>
           <Row>
             <Col xs={12}>
-              <OAuthLoginButtons
+              {/* <OAuthLoginButtons
                 services={['facebook', 'github', 'google']}
                 emailMessage={{
                   offset: 100,
                   text: 'Log In with an Email Address',
                 }}
-              />
+              /> */}
             </Col>
           </Row>
           <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
