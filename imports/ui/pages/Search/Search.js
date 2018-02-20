@@ -17,6 +17,40 @@ const goToSession = (history) => {
   history.push('/sessions/new');
 };
 
+const queryHistory = (queryText) => {
+  document.querySelector('#resLoading').style.display = 'block';
+  document.querySelector('#resDone').style.display = 'none';
+  document.querySelector('[name="searchInput"]').value = queryText;
+  var searchInputText = queryText;
+  console.log(queryText);
+
+  if(document.querySelector('#resLoading')){
+      document.querySelector('#resLoading').style.display = 'block';
+      document.querySelector('#resDone').style.display = 'none';
+    }
+ Meteor.call('queryCommuter',searchInputText, (error, response) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    } else {
+      result = response;
+      console.log(result);
+      Session.set("result", result);
+      if(document.querySelector('#resLoading')){
+          document.querySelector('#resLoading').style.display = 'none';
+          document.querySelector('#resDone').style.display = 'block';
+        }
+
+      Meteor.call('publicQueries.insert', {query:searchInputText}, (error, publicQueryId) => {
+        if (error) {
+          Bert.alert(error.reason, 'danger');
+        } else {
+          console.log("saved authenticated public query");
+        }
+      });
+
+    }
+  });
+};
 
 class Search extends React.Component {
   constructor(props) {
@@ -81,6 +115,7 @@ class Search extends React.Component {
     });
   }
 
+
   render(){
     const { result, match, query, history, recentSearches } = this.props;
     return (
@@ -110,9 +145,9 @@ class Search extends React.Component {
               </form>
               <Panel id="collapsible-panel-example-1" expanded={this.state.open}>
                 <Panel.Collapse>
-                  <Panel.Body>
+                  <Panel.Body onClick={() => this.setState({ open: !this.state.open })}>
                     {recentSearches.length ?
-                      recentSearches.map(({_id,query})=>(<p key={_id}>{query}</p>))
+                      recentSearches.map(({_id,query})=>(<p key={_id} ><a onClick={ () => queryHistory(query) } >{query} </a></p>))
                        : <p>No history yet</p>}
                   </Panel.Body>
                 </Panel.Collapse>

@@ -21,6 +21,44 @@ const goToAbout = (history) => {
   history.push('/about');
 };
 
+const queryHistory = (queryText, history) => {
+  document.querySelector('#resLoading').style.display = 'block';
+  // document.querySelector('#resDone').style.display = 'none';
+  document.querySelector('[name="searchInput"]').value = queryText;
+  var searchInputText = queryText;
+  console.log(queryText);
+
+  if(document.querySelector('#resLoading')){
+      document.querySelector('#resLoading').style.display = 'block';
+      // document.querySelector('#resDone').style.display = 'none';
+    }
+ Meteor.call('queryCommuter',searchInputText, (error, response) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    } else {
+      result = response;
+      console.log(result);
+      Session.set("result", result);
+      history.push(`/search/${searchInputText}`);
+
+      if(document.querySelector('#resLoading')){
+          document.querySelector('#resLoading').style.display = 'none';
+          document.querySelector('#resDone').style.display = 'block';
+        }
+
+      Meteor.call('publicQueries.insert', {query:searchInputText}, (error, publicQueryId) => {
+        if (error) {
+          Bert.alert(error.reason, 'danger');
+        } else {
+          console.log("saved authenticated public query");
+        }
+      });
+
+    }
+  });
+};
+
+
 class Index extends React.Component {
 
   constructor(props) {
@@ -99,8 +137,10 @@ class Index extends React.Component {
                         >
 
                           {recentSearches.length ?
-                            recentSearches.map(({_id,query})=>(<MenuItem key={_id}>{query}</MenuItem>))
+                            recentSearches.map(({_id,query})=>(<MenuItem key={_id} onClick={ () => queryHistory(query, history) }>{query}</MenuItem>))
                              : <MenuItem key="2">No history yet</MenuItem>}
+
+                             {/* <a onClick={ () => queryHistory(query) } >{query} </a> */}
 
                         </DropdownButton>
                         <FormControl
@@ -147,7 +187,6 @@ export default createContainer(({ match }) => {
   const user = Meteor.user();
   const userId = Meteor.userId();
   Meteor.subscribe('publicQueries');
-  console.log(PublicQueries.find().fetch().length);
   return {
     authenticated: !loggingIn && !!userId,
     recentSearches: PublicQueries.find().fetch(),
