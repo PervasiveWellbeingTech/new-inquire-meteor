@@ -87,7 +87,7 @@ import './Results.scss';
         document.querySelector('#resLoading').style.display = 'block';
         document.querySelector('#resDone').style.display = 'none';
       }
-   Meteor.call('queryCommuter',searchInputText, (error, response) => {
+   Meteor.call('queryCommuter',searchInputText, Session.get("currParams"), (error, response) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
@@ -253,7 +253,7 @@ import './Results.scss';
         document.querySelector('#resLoading').style.display = 'block';
         document.querySelector('#resDone').style.display = 'none';
       }
-   Meteor.call('queryCommuter',searchInputText, (error, response) => {
+   Meteor.call('queryCommuter',searchInputText, Session.get("currParams"), (error, response) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
@@ -351,10 +351,11 @@ export default class Results extends React.Component {
   }
 
   render() {
-    const { query, sessionId } = this.props;
+    const { query, sessionId, queryParams } = this.props;
     Session.set("currQueryId", "lol");
     Session.set("currQueryText", query.query);
     Session.set("currSessionId", sessionId);
+    Session.set("currParams", queryParams);
     return (
       <div> <div id="resDone">
         <BootstrapTable data={ query.query_results } deleteRow={ false } options={ this.options } responsive striped hover id="searchDone">
@@ -373,6 +374,7 @@ export default class Results extends React.Component {
 Results.propTypes = {
   query: PropTypes.object,
   sessionId: PropTypes.string,
+  queryParams: PropTypes.object,
 };
 
 //query-string, query_results=[], result_count-int

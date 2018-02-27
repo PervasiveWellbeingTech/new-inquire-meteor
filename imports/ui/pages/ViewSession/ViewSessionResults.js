@@ -370,7 +370,7 @@ class ViewSessionResults extends React.Component {
                 </Col>
                 <Col xs={12} md={12}>
                   <div id = "searchResults">
-                    { result ? <Results query= {result} history={history} sessionId = {sessionId} /> :  <p>Tip: Assign weights to the words in query<br/></p>}
+                    { result ? <Results query= {result} history={history} sessionId = {sessionId} queryParams = {doc.queryParams}/> :  <p>Tip: Assign weights to the words in query<br/></p>}
                   </div>
                 </Col>
               </Row>

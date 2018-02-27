@@ -118,6 +118,7 @@ class Search extends React.Component {
 
   render(){
     const { result, match, query, history, recentSearches } = this.props;
+    const emptyParams = {};
     return (
       <Grid>
         <div className="">
@@ -169,7 +170,7 @@ class Search extends React.Component {
             </Col>
             <Col xs={12} md={12}>
               <div id = "searchResults">
-                <Results query= {result} history={history} sessionId="public" />
+                <Results query= {result} history={history} sessionId="public" queryParams= { emptyParams} />
               </div>
             </Col>
           </Row>
