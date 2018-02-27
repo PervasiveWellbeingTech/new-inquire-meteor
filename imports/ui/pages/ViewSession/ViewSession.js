@@ -40,6 +40,49 @@ const handleRemove = (sessionId, history) => {
   }
 };
 
+const queryHistory = (queryText,history,sessionId, match, doc) => {
+  document.querySelector('#resLoading').style.display = 'block';
+  // document.querySelector('#resDone').style.display = 'none';
+  document.querySelector('[name="searchInput"]').value = queryText;
+  var searchInputText = queryText;
+
+
+  if(document.querySelector('#resLoading')){
+      document.querySelector('#resLoading').style.display = 'block';
+      // document.querySelector('#resDone').style.display = 'none';
+    }
+ Meteor.call('queryCommuter',searchInputText, doc.queryParams, (error, response) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    } else {
+      result = response;
+      console.log(result);
+      Session.set("result", result);
+      if(document.querySelector('#resLoading')){
+          document.querySelector('#resLoading').style.display = 'none';
+          // document.querySelector('#resDone').style.display = 'block';
+        }
+        history.push(`${match.url}/search/${searchInputText}`);
+
+        //TODO:  save all this info to the current session
+        Meteor.call('results.insert', result, sessionId, (error, response) => {
+          if (error){
+            console.log(error);
+          }else{
+            console.log('results saved in history');
+            Meteor.call('privateQueries.insert', {query:searchInputText, sessionId: sessionId}, (error, privateQueryId) => {
+              if (error) {
+                Bert.alert(error.reason, 'danger');
+              } else {
+                console.log("saved authenticated private query");
+              }
+            });
+          }
+        });
+    }
+  });
+}
+
 
 class ViewSession extends React.Component {
 
@@ -67,7 +110,7 @@ class ViewSession extends React.Component {
   }
 
   handleSubmit() {
-    const { history, match, sessionId } = this.props;
+    const { history, match, sessionId, doc } = this.props;
     console.log(history);
     console.log(document.querySelector('[name="searchInput"]').value);
     const searchInputText = document.querySelector('[name="searchInput"]').value;
@@ -76,7 +119,7 @@ class ViewSession extends React.Component {
       document.querySelector('#resLoading').style.display = 'block';
       // document.querySelector('#resDone').style.display = 'none';
     }
-    Meteor.call('queryCommuter',searchInputText, (error, response) => {
+    Meteor.call('queryCommuter',searchInputText,doc.queryParams, (error, response) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
@@ -84,7 +127,6 @@ class ViewSession extends React.Component {
         console.log(result);
         console.log(history);
         Session.set("result", result);
-        // history.push(`/search/${searchInputText}`);
         history.push(`${match.url}/search/${searchInputText}`);
         Meteor.call('results.insert', result, sessionId, (error, response) => {
           if (error){
@@ -106,7 +148,7 @@ class ViewSession extends React.Component {
   }
 
   render() {
-    const { history, doc, recentSearches, sessionId } = this.props;
+    const { match, history, doc, recentSearches, sessionId } = this.props;
     return (
       <div className="ViewSession">
 
@@ -175,7 +217,7 @@ class ViewSession extends React.Component {
                           title="History"
                         >
                           {recentSearches.length ?
-                            recentSearches.map(({_id,query})=>(<MenuItem key={_id}>{query}</MenuItem>))
+                            recentSearches.map(({_id,query})=>(<MenuItem key={_id} onClick={ () => queryHistory(query, history, sessionId, match, doc) } >{query}</MenuItem>))
                              : <MenuItem key="2">No history yet</MenuItem>}
 
                         </DropdownButton>

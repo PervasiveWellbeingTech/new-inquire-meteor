@@ -28,7 +28,7 @@ const queryHistory = (queryText) => {
       document.querySelector('#resLoading').style.display = 'block';
       document.querySelector('#resDone').style.display = 'none';
     }
- Meteor.call('queryCommuter',searchInputText, (error, response) => {
+ Meteor.call('queryCommuter',searchInputText,{}, (error, response) => {
     if (error) {
       Bert.alert(error.reason, 'danger');
     } else {
@@ -99,7 +99,7 @@ class Search extends React.Component {
         }
       });
     }
-   Meteor.call('queryCommuter',searchInputText, (error, response) => {
+   Meteor.call('queryCommuter',searchInputText,{}, (error, response) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {

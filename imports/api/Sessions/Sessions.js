@@ -80,6 +80,14 @@ Sessions.schema = new SimpleSchema({
     optional: true,
     blackbox: true
   },
+  results: {
+    type: Array,
+    label: "History of queries and results, identified by Ids",
+    optional: true
+  },
+  'results.$': {
+    type: String
+  },
 });
 
 Sessions.attachSchema(Sessions.schema);

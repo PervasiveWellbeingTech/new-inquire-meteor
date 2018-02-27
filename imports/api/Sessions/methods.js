@@ -9,6 +9,16 @@ Meteor.methods({
       title: String,
       description: String,
     });
+    var queryParams = {
+      numResults: 50,
+      minWords: 5,
+      maxWords: 30,
+      //filter implied
+      percent: 10,
+      dataset: "livejournal"
+    };
+    doc.queryParams = queryParams;
+
     console.log("we inn this biatch");
     try {
       console.log(doc);
