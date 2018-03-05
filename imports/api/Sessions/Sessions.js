@@ -80,13 +80,13 @@ Sessions.schema = new SimpleSchema({
     optional: true,
     blackbox: true
   },
-  results: {
+  savedResults: {
     type: Array,
     label: "History of queries and results, identified by Ids",
-    optional: true
   },
-  'results.$': {
-    type: String
+  'savedResults.$': {
+    type: Object,
+    blackbox: true
   },
 });
 

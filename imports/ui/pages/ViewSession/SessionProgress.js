@@ -9,6 +9,8 @@ import NotFound from '../NotFound/NotFound';
 import Loading from '../../components/Loading/Loading';
 import validate from '../../../modules/validate';
 import { Session } from 'meteor/session';
+import SessionResults from '../../components/Results/SessionResults';
+
 
 
 class SessionProgress extends React.Component {
@@ -19,12 +21,16 @@ class SessionProgress extends React.Component {
 
   render() {
     const { history, doc } = this.props;
+    const passRes = { query: "doesnt matter",query_results: doc && doc.savedResults};
     return (
       <div className="SessionProgress">
 
         <Grid>
           <h1 className="text-center">{ doc && doc.title } Analysis</h1>
           <br></br>
+          <div id = "searchResults">
+            { doc ? <SessionResults query= { passRes } history={history} sessionId = {doc && doc._id} queryParams = {doc && doc.queryParams}/> :  <p>Tip: Assign weights to the words in query<br/></p>}
+          </div>
           {/* <Row>
             <Col md={3}>
               <Panel bsStyle="primary">

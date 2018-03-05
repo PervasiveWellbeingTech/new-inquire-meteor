@@ -65,4 +65,20 @@ Meteor.methods({
           }
         });
       },
+      saveResult(sessionId, result){
+        check(sessionId, String);
+        check(result, Object);
+        console.log(sessionId);
+        console.log(result);
+        try {
+          Sessions.update(sessionId,{
+            $addToSet:{
+              savedResults: result,
+            },
+          });
+          return sessionId; // Return _id so we can redirect to session after update.
+        } catch (exception) {
+          throw new Meteor.Error('500', exception);
+        }
+      },
 });

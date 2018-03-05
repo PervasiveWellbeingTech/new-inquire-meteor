@@ -76,10 +76,9 @@ import './Results.scss';
     }
   }
 
-  const handleSaveResult = (sessionId, text) => {
+  const handleSaveResult = (result,sessionId) => {
     if (confirm('Are you sure? This is permanent!')) {
-      var result = {};
-      Meteor.call("saveResult", result);
+      Meteor.call("saveResult", sessionId, result);
     }
   }
 
@@ -187,7 +186,7 @@ import './Results.scss';
     // console.log(row);
     return (
       <div>
-      <DelFormatter shortid={ cell }  id={ Session.get("currQueryId") } username={ name } /> &nbsp; <UrlFormatter url={ cell } id={ Session.get("currQueryId") } shortid={ row.post_id } /> <br/>
+      <DelFormatter url={ cell } id={ Session.get("currQueryId") } shortid={ row.post_id } /> &nbsp; <UrlFormatter url={ cell } id={ Session.get("currQueryId") } shortid={ row.post_id } /> <br/>
       <ShortIdFormatter sessionId = { row.sessionId } text= { row.sent_text } /> &nbsp; <TextFormatter text={ row.sent_text } /><br/>
       <ContextFormatter post_id={ row.post_id } sent_num={ row.sent_num }  />
     </div>
@@ -211,7 +210,7 @@ import './Results.scss';
   class OpenFormatter extends React.Component {
     render() {
       return (
-        <a onClick={ () => handleSaveUser(this.props.id, this.props.shortid, this.props.username) } ><FontAwesome name='window-restore' /></a>
+        <a onClick={ () => handleSaveUser(this.props.id, this.props.shortid, this.props.username) } ><FontAwesome name='user-plus' /></a>
       );
     }
   }
@@ -219,7 +218,7 @@ import './Results.scss';
   class SaveFormatter extends React.Component {
     render() {
       return (
-        <a onClick={ () => handleSaveResult(this.props.sessionId, this.props.text) } ><FontAwesome name='floppy-o' /></a>
+        <a onClick={ () => handleSaveResult(this.props.result, Session.get("currSessionId")) } ><FontAwesome name='floppy-o' /></a>
       );
     }
   }
@@ -227,21 +226,21 @@ import './Results.scss';
   class DelFormatter extends React.Component {
     render() {
       return (
-        <a onClick={ () => handleSaveUser(this.props.id, this.props.shortid, this.props.username) } ><FontAwesome name='user-plus' /></a>
+        <a onClick={ () => handleOpenUrl(this.props.url,this.props.id, this.props.shortid) } ><FontAwesome name='window-restore' /></a>
       );
     }
   }
 
   function delFormatter(cell, row, enumObject, index) {
     // console.log(Session.get("currQueryId"));
-    var end = row.url.indexOf(".");
-    var name = row.url.substr(7,end-7);
+    // var end = row.url.indexOf(".");
+    // var name = row.url.substr(7,end-7);
     return (<div>
       {/* <DelFormatter shortid={ cell }  id={ Session.get("currQueryId") } username={ name } /> &nbsp; &nbsp; &nbsp; */}
-      <OpenFormatter shortid={ cell }  id={ Session.get("currQueryId") } username={ name } /><br/>
+      <OpenFormatter shortid={ cell }  id={ Session.get("currQueryId") } username={ row.username } /><br/>
       {/* <ShortIdFormatter sessionId = { row.sessionId } text= { row.sent_text } /> &nbsp; &nbsp; &nbsp; */}
       <QueryFormatter sessionId = { row.sessionId } text= { row.sent_text } /><br/>
-      <SaveFormatter sessionId = { row.sessionId } text= { row.sent_text } />
+      <SaveFormatter result = { row } />
 
     </div>
     );
@@ -356,7 +355,7 @@ const popoverHoverFocus = (
       // return fieldValue ? 'greenbg' : '';
     }
 
-export default class Results extends React.Component {
+export default class SessionResults extends React.Component {
   constructor(props) {
     super(props);
     this.options = {
@@ -378,6 +377,9 @@ export default class Results extends React.Component {
           {/* <TableHeaderColumn dataField='post_id' columnClassName={ columnClassNameFormat } isKey dataSort dataFormat={ shortidFormatter } width='4%'>Query</TableHeaderColumn> */}
           <TableHeaderColumn dataField='sent_text' columnClassName={ columnClassNameFormat } hidden>Text</TableHeaderColumn>
           <TableHeaderColumn dataField='sent_num' columnClassName={ columnClassNameFormat } hidden>num</TableHeaderColumn>
+          <TableHeaderColumn dataField='ext_post_id' columnClassName={ columnClassNameFormat } hidden>num</TableHeaderColumn>
+          <TableHeaderColumn dataField='post_time' columnClassName={ columnClassNameFormat } hidden>num</TableHeaderColumn>
+          <TableHeaderColumn dataField='username' columnClassName={ columnClassNameFormat } hidden>num</TableHeaderColumn>
           <TableHeaderColumn dataField='similarity' columnClassName={ columnClassNameFormat } dataSort dataFormat={ simFormatter } width='7%'>Similarity</TableHeaderColumn>
           <TableHeaderColumn dataField='url' columnClassName={ columnClassNameFormat } dataSort dataFormat={ urlFormatter } width='90%' >result</TableHeaderColumn>
           <TableHeaderColumn dataField='post_id' columnClassName={ columnClassNameFormat } isKey dataFormat={ delFormatter } width='3%'>Action</TableHeaderColumn>
@@ -387,7 +389,7 @@ export default class Results extends React.Component {
   }
 }
 
-Results.propTypes = {
+SessionResults.propTypes = {
   query: PropTypes.object,
   sessionId: PropTypes.string,
   queryParams: PropTypes.object,

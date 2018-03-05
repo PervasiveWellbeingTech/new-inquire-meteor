@@ -6,7 +6,7 @@ import validate from '../../../modules/validate';
 import Loading from '../../components/Loading/Loading';
 import { Session } from 'meteor/session';
 import Sessions from '../../../api/Sessions/Sessions';
-import Results from '../../components/Results/Results';
+import SessionResults from '../../components/Results/SessionResults';
 var FontAwesome = require('react-fontawesome');
 import PrivateQueries from '../../../api/PrivateQueries/PrivateQueries';
 
@@ -180,12 +180,13 @@ class ViewSessionResults extends React.Component {
 
   render(){
     const { result, match, query, history, doc, recentSearches, sessionId } = this.props;
+    console.log(doc);
     return (
       <Grid>
         <div className="">
           <h1 className="text-center">{ doc && doc.title }</h1>
           <br></br>
-          <Row>
+          <Row onClick={() => goToSession(history,sessionId)}>
             <Col md={3}>
               <Panel bsStyle="primary">
                 <Panel.Heading>
@@ -197,15 +198,20 @@ class ViewSessionResults extends React.Component {
             <Col md={2}>
               <Panel bsStyle="success">
                 <Panel.Heading>
-                  <Panel.Title componentClass="h3">Saved Results</Panel.Title>
+                  <Panel.Title componentClass="h3" onClick={() => goToSession(history,sessionId)}>Saved Results</Panel.Title>
                 </Panel.Heading>
-                <Panel.Body>Panel content</Panel.Body>
+                <Panel.Body>
+                  {doc && doc.savedResults && doc.savedResults.length}
+                  {/* {doc.savedResults && doc.savedResults.length ?
+                    doc.savedResults.map(({post_id,username})=>(<p key={post_id}> {username}</p>))
+                    : <p>No saved results yet</p>} */}
+                </Panel.Body>
               </Panel>
             </Col>
             <Col md={2}>
               <Panel bsStyle="info">
                 <Panel.Heading>
-                  <Panel.Title componentClass="h3">Saved Profiles</Panel.Title>
+                  <Panel.Title componentClass="h3" onClick={() => goToSession(history,sessionId)}>Saved Profiles</Panel.Title>
                 </Panel.Heading>
                 <Panel.Body>Panel content</Panel.Body>
               </Panel>
@@ -213,7 +219,7 @@ class ViewSessionResults extends React.Component {
             <Col md={2}>
               <Panel bsStyle="warning">
                 <Panel.Heading>
-                  <Panel.Title componentClass="h3">Notes</Panel.Title>
+                  <Panel.Title componentClass="h3" onClick={() => goToSession(history,sessionId)}>Notes</Panel.Title>
                 </Panel.Heading>
                 <Panel.Body>Panel content</Panel.Body>
               </Panel>
@@ -221,7 +227,7 @@ class ViewSessionResults extends React.Component {
             <Col md={3}>
               <Panel bsStyle="danger">
                 <Panel.Heading>
-                  <Panel.Title componentClass="h3">Filters</Panel.Title>
+                  <Panel.Title componentClass="h3" onClick={() => goToSession(history,sessionId)}>Filters</Panel.Title>
                 </Panel.Heading>
                 <Panel.Body>Panel content</Panel.Body>
               </Panel>
@@ -359,8 +365,9 @@ class ViewSessionResults extends React.Component {
                   <span><strong>KEY:</strong></span> &nbsp; &nbsp;
                   <FontAwesome name='search'/> <span> -use result as new query </span> &nbsp; &nbsp;
                   <FontAwesome name='search-plus'/> <span> -append result to current query </span> &nbsp; &nbsp;
-                  <FontAwesome name='user-plus'/> <span> -save result user-profile as interesting</span> &nbsp;
-                  <FontAwesome name='window-restore'/> <span> -open original post in new tab</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                  <FontAwesome name='user-plus'/> <span> -save user-profile</span> &nbsp;
+                  <FontAwesome name='floppy-o'/> <span> -save result</span> &nbsp;
+                  <FontAwesome name='window-restore'/> <span> -open original post </span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                   <small>{result && result.result_count} results in 0.8sec</small>
 
                   {/* <Button bsStyle="primary" onClick={() => goToSession(this.props.history)} >Start New Session</Button> */}
@@ -370,7 +377,7 @@ class ViewSessionResults extends React.Component {
                 </Col>
                 <Col xs={12} md={12}>
                   <div id = "searchResults">
-                    { result ? <Results query= {result} history={history} sessionId = {sessionId} queryParams = {doc.queryParams}/> :  <p>Tip: Assign weights to the words in query<br/></p>}
+                    { result ? <SessionResults query= {result} history={history} sessionId = {sessionId} queryParams = {doc && doc.queryParams}/> :  <p>Tip: Assign weights to the words in query<br/></p>}
                   </div>
                 </Col>
               </Row>

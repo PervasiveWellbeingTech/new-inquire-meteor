@@ -18,6 +18,7 @@ Meteor.methods({
       dataset: "livejournal"
     };
     doc.queryParams = queryParams;
+    doc.savedResults = new Array(0);
 
     console.log("we inn this biatch");
     try {
