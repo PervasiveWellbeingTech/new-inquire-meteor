@@ -18,7 +18,7 @@
     "commonmark": "^0.28.1",
     "core-js": "^2.5.1",
     "fs": "0.0.1-security",
-    "handlebars": "^4.0.10",
+    "handlebars": "^4.3.0",
     "install": "^0.10.2",
     "jquery": "^2.2.4",
     "jquery-validation": "^1.17.0",
